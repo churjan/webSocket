@@ -1,0 +1,102 @@
+/**index.wxss**/
+
+/* emoji */
+.emoji{
+  width:50rpx;
+  height:50rpx;
+}
+
+/* chatlist */
+.chatlist{
+  height:calc(100vh - 110rpx);
+  background-color: #fafafa;
+}
+.chatlist .item{
+  margin-top:20rpx;
+}
+.chatlist .item .avatar{
+  width: 70rpx;
+  height: 70rpx;
+  border-radius: 50%;
+  margin-left: 20rpx;
+  margin-right: 20rpx;
+}
+.chatlist .item .msg{
+  position: relative;
+  max-width:60%;
+  margin:0 10rpx;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  font-size: 30rpx;
+  word-break:break-all;
+
+}
+.chatlist .item .msg .arrow-left{
+  position:absolute;
+  width: 0;
+  height:0;
+  left:-14rpx;
+  top:20rpx;
+ 
+  border: 16rpx solid transparent;
+  border-right-color:#fff;
+  border-left:none;
+}
+.chatlist .item .msg .arrow-right{
+  position:absolute;
+  width: 0;
+  height:0;
+  right:-14rpx;
+  top:20rpx;
+  border: 16rpx solid transparent;
+  border-left-color:#8fcbf7;
+  border-right:none;
+}
+
+/* chat-input */
+.chat-input{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width:100vw;
+  background-color: #fff;
+  padding: 10rpx 0;
+ 
+  
+}
+.chat-input .chat-wrap{
+   align-items: center;
+}
+
+.chat-input .img1{
+  width:50rpx;
+  height:50rpx;
+  margin:0 20rpx 0 25rpx;
+}
+.chat-input .img2{
+   width:50rpx;
+  height:50rpx;
+ margin-left:20rpx;
+}
+.chat-input .input-box{
+    flex:1;
+    max-height: 30rpx;
+    border-radius:10rpx;
+    border:1rpx solid gainsboro;
+    padding:10rpx;
+    background-color: #EFEFEF;
+    font-size: 30rpx;
+}
+.chat-input .img3{
+  width:50rpx;
+  height:50rpx;
+  margin:0 25rpx 0 20rpx;
+}
+/* emoji */
+.chat-input .emoji-wrap{
+  justify-content: space-around;
+  padding: 10rpx 10rpx;
+}
+.chat-input .emoji{
+  margin:6rpx;
+}

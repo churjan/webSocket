@@ -1,0 +1,24 @@
+
+<scroll-view scroll-y class="chatlist" scroll-top="{{iptObj.msg.length*9999}}">
+  <view class="item flex" wx:for="{{iptObj.msg}}" wx:key="{{index}}" style="flex-direction: {{item.isMy?'row-reverse':'row'}};margin-bottom: {{index===iptObj.msg.length-1?150:20}}rpx;">
+      <image src="{{item.headUrl}}" class="avatar"/>
+     <block wx:if="{{item.type=='text'}}">
+      <view class="msg" style="background-color:{{item.isMy?'#8fcbf7':'#fff'}}"><div class="{{item.isMy?'arrow-right':'arrow-left'}}"></div>{{item.content}}</view>
+     </block>
+  </view>
+</scroll-view>
+<view class="chat-input">
+  <view class="chat-wrap flex">
+    <image class="img1" src="/images/{{iptObj.inputWay==='keyboard'?'voice':'keyboard'}}.png" catchtap="handleChangeIptWay"></image>
+    <input wx:if="{{iptObj.inputWay==='keyboard'}}" placeholder="这是一个可以自动聚焦的input" class="input-box" cursor-spacing="20" adjust-position="{{true}}" type="text" confirm-type="send" value="{{iptObj.tempVal}}" focus="{{isIptFocus}}" bindinput="handleGetIptVal" bindconfirm="handleSendMsg" bindfocus="handleSetIptFocus"/>
+    <image class="img2" catchtap="handleShowEmoji" src="/images/{{!emojiShow?'emoji':'keyboard'}}.png"></image>
+    <image class="img3" src="/images/extra.png"></image>
+  </view>
+<view class="emoji-wrap flex" wx:if="{{emojiShow}}">
+  <block wx:for="{{emojis}}" wx:key="unique">
+  <image class="emoji" catchtap="chooseEmoji" src="http://soupu.oss-cn-shanghai.aliyuncs.com/emoji/{{item.emoji}}.png" data-char="{{item.char}}"></image>
+  </block>
+</view>
+</view>
+
+
