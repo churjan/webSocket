@@ -80,7 +80,6 @@
 }
 .chat-input .input-box{
     flex:1;
-    max-height: 30rpx;
     border-radius:10rpx;
     border:1rpx solid gainsboro;
     padding:10rpx;

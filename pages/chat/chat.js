@@ -4,8 +4,7 @@ const app = getApp()
 Page({
  
   data: {
-    iptObj:{
-      inputWay: 'keyboard',
+      iptWay: 'keyboard',
       tempVal:'',
       msg: [
         {
@@ -91,10 +90,10 @@ Page({
           content: '大家好才是真的好哈哈'
 
         },
-      ]
-    },
+      ],
     isIptFocus:false,
-    emojiShow:false,
+    isEmojiShow:false,
+    isCustomShow:false,
     emojiChar: "☺-😋-😌-😍-😏-😜-😝-😞-😔-😪-😭-😁-😂-😃-😅-😆-👿-😒-😓-😔-😏-😖-😘-😚-😒-😡-😢-😣-😤-😢-😨-😳-😵-😷-😸-😻-😼-😽-😾-😿-🙊-🙋-🙏-✈-🚇-🚃-🚌-🍄-🍅-🍆-🍇-🍈-🍉-🍑-🍒-🍓-🐔-🐶-🐷-👦-👧-👱-👩-👰-👨-👲-👳-💃-💄-💅-💆-💇-🌹-💑-💓-💘-🚲",
     //0x1f---
     emoji: [
@@ -133,7 +132,6 @@ Page({
       this.setData({
         emojis: emojis
       })
-      console.log(this.data.emojis,111)
     });
    
   },
@@ -141,23 +139,35 @@ Page({
   chooseEmoji(e){
     let char = e.target.dataset.char;
     this.setData({
-      'iptObj.tempVal': this.data.iptObj.tempVal + char
+      tempVal: this.data.tempVal + char
     })
   },
-
+  handleClickMsg(){
+    this.setData({
+      isIptFocus:false,
+      isEmojiShow:false,
+      isCustomShow:false
+    })
+  },
   handleChangeIptWay(){
      this.setData({
-       'iptObj.inputWay': this.data.iptObj.inputWay === 'keyboard' ? 'voice' :'keyboard',
-       isIptFocus: this.data.iptObj.inputWay === 'keyboard'?false:true,
-       emojiShow: this.data.emojiShow ? true : false
+       //恢复为默认值
+       isEmojiShow:false,
+       isCustomShow:false,
+       
+       iptWay: this.data.iptWay === 'keyboard' ? 'voice' :'keyboard'
+      })
+      this.setData({
+        isIptFocus: this.data.iptWay === 'keyboard' ? true : false
       })
    
   },
   //获取键盘输入的信息
   handleGetIptVal(e){
     this.setData({
-      'iptObj.tempVal':e.detail.value
+      tempVal:e.detail.value
     })
+    console.log(this.data.tempVal)
   },
   //发送信息
   handleSendMsg(){
@@ -165,26 +175,56 @@ Page({
       type: 'text',
       headUrl: 'http://tx.haiqq.com/uploads/allimg/170504/0641415410-1.jpg',
       isMy: true,
-      content: this.data.iptObj.tempVal
+      content: this.data.tempVal
     };
-    let iptObj=this.data.iptObj.msg;
+    let iptObj=this.data.msg;
     iptObj.push(iptObjFragment);
 
     this.setData({
-      'iptObj.msg': iptObj,
-      'iptObj.tempVal':''
+      msg: iptObj,
+      tempVal:''
     })
   },
-  handleSetIptFocus(){
+  handleIptFocus(){
+    this.setData({
+      isEmojiShow: false,
+      isCustomShow:false
+    })
+      this.setData({
+        isIptFocus: true
+      })
+  },
+  handleIptBlur(){
+    this.setData({
+      isIptFocus: false
+    })
+  },
+  handleClickEmoji(){
+    this.setData({
+      //恢复为默认值
+      iptWay:'keyboard',
+      isEmojiShow:false,
+
+      isEmojiShow:this.data.isEmojiShow?false:true,
+    })
+    this.setData({
+      isIptFocus: this.data.isEmojiShow ? false : true
+    })
    
   },
-  handleShowEmoji(){
-    console.log(1234)
+  handleClickCustom(){
     this.setData({
-      emojiShow:this.data.emojiShow?false:true,
-      isIptFocus: this.data.emojiShow?true:false,
-      'iptObj.inputWay': this.data.emojiShow ? 'voice' : 'keyboard'
+      //恢复为默认值
+      iptWay: 'keyboard',
+      isEmojiShow:false,
+
+      isCustomShow: this.data.isCustomShow ? false : true,
+    })
+    this.setData({
+      isIptFocus: this.data.isCustomShow ? false : true
     })
   }
+
+
   
 })
