@@ -52,6 +52,39 @@
   border-left-color:#8fcbf7;
   border-right:none;
 }
+.chatlist .item .thumbnail{
+  width:150rpx;
+  height:280rpx;
+  border-radius:10rpx;
+}
+.chatlist .item .poster{
+  width:280rpx;
+  height:280rpx;
+  border-radius:10rpx;
+}
+
+/* play-video-modal */
+.play-video-modal{
+  position: fixed;
+  left:0;
+  right:0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,.5);
+  z-index:666;
+  justify-content: center;
+  align-content: center;
+}
+.play-video-modal .video-content{
+  width:100%;
+}
+.play-video-modal .close-icon{
+  margin-top:150rpx;
+  width:80rpx;
+  height:80rpx;
+}
+
+
 
 /* chat-input */
 .chat-input{
@@ -65,9 +98,20 @@
   
 }
 .chat-input .chat-wrap{
+  height:80rpx;
    align-items: center;
 }
-
+.chat-input .bindopensetting{
+  position:absolute;
+  left: 25rpx;
+  top: 25rpx;
+  width:50rpx;
+  height:50rpx;
+  background-color: transparent;
+}
+.chat-input .bindopensetting:after{
+  border:0;
+}
 .chat-input .img1{
   width:50rpx;
   height:50rpx;
@@ -82,9 +126,19 @@
     flex:1;
     border-radius:10rpx;
     border:1rpx solid gainsboro;
-    padding:10rpx;
+    padding:15rpx;
     background-color: #EFEFEF;
     font-size: 30rpx;
+}
+.chat-input .voice-box{
+    flex:1;
+    border-radius:10rpx;
+    border:1rpx solid gainsboro;
+    background-color: #F8F8F8;
+    font-size: 30rpx;
+}
+.chat-input .voice-box.btn-voice-press {
+    background-color: gainsboro;
 }
 .chat-input .img3{
   width:50rpx;
@@ -99,3 +153,20 @@
 .chat-input .emoji{
   margin:6rpx;
 }
+
+/* custom */
+.chat-input .custom-wrap{
+  padding: 30rpx 20rpx;
+}
+.chat-input .custom-wrap .c{
+  margin: 20rpx 30rpx;
+}
+.chat-input .custom-wrap image{
+  width: 100rpx;
+  height:100rpx;
+}
+.chat-input .custom-wrap view{
+  text-align: center;
+  font-size:28rpx;
+}
+

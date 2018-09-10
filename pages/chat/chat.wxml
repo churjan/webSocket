@@ -1,23 +1,55 @@
 
 <scroll-view scroll-y class="chatlist" scroll-top="{{msg.length*9999}}" bindtap="handleClickMsg" >
+
+
   <view class="item flex" wx:for="{{msg}}" wx:key="{{index}}" style="flex-direction: {{item.isMy?'row-reverse':'row'}};margin-bottom: {{index===msg.length-1?150:20}}rpx;">
-      <image src="{{item.headUrl}}" class="avatar"/>
+    <image src="{{item.headUrl}}" class="avatar"/>
+    <!-- 文字 -->
      <block wx:if="{{item.type=='text'}}">
       <view class="msg" style="background-color:{{item.isMy?'#8fcbf7':'#fff'}}"><div class="{{item.isMy?'arrow-right':'arrow-left'}}"></div>{{item.content}}</view>
      </block>
+
+    <!-- 图片 -->
+     <block wx:if="{{item.type=='image'}}">
+      <image class="thumbnail"  src="{{item.content}}"
+                   mode="aspectFill" bindtap="handleClickThumbnail" data-url="{{item.content}}"/>
+     </block>
+
+     <!-- 视频 -->
+    <block wx:if="{{item.type=='video'}}">
+      <image class="poster" src="/images/play.jpg" data-url="{{item.content}}" bindtap="handleClickShowVideo"></image>
+      
+    </block>
   </view>
+
+
+
 </scroll-view>
+
+<!-- play-video-model -->
+<view class="play-video-modal flex" wx-if="{{videoObj.isShowVideoModel}}"  catchtouchmove="{{true}}">
+  <video id="myVideo" class="video-content" src="{{videoObj.videoUrl}}" bindended="handleClickHideVideoModal"></video>
+  <image class="close-icon" src="/images/close.png" bindtap="handleClickHideVideoModal"></image>
+</view>
+
+
+<!-- chat-input -->
 <view class="chat-input">
+<button class="bindopensetting" wx:if="{{voiceObj.isShowAuthBtn}}" bindopensetting="handleVoiceAuth"  open-type="openSetting"></button>
   <view class="chat-wrap flex">
-    <image class="img1" src="/images/{{iptWay==='keyboard'?'voice':'keyboard'}}.png" catchtap="handleChangeIptWay"></image>
+    <image class="img1" src="/images/{{iptWay==='keyboard'?'voice':'keyboard'}}.png" catchtap="handleClickChangeIptWay"></image>
     
-    <input wx:if="{{iptWay==='keyboard'}}" placeholder="这是一个可以自动聚焦的input" class="input-box" cursor-spacing="20" adjust-position="{{true}}" confirm-type="send" value="{{tempVal}}" focus="{{isIptFocus}}" bindinput="handleGetIptVal" bindconfirm="handleSendMsg"  bindfocus="handleIptFocus" bindblur="handleIptBlur" />
+    <input wx:if="{{iptWay==='keyboard'}}" placeholder="这是一个可以自动聚焦的input" class="input-box" cursor-spacing="20" adjust-position="{{true}}" confirm-type="send" value="{{tempVal}}" focus="{{isIptFocus}}" bindinput="handleGetIptVal" bindconfirm="handleSendMsg"  bindfocus="handleIptFocus" bindblur="handleIptBlur" cursor="{{cursorPos}}"/>
+    <button wx:else class="voice-box" hover-class="btn-voice-press">按住 说话</button>
 
     <image class="img2" catchtap="handleClickEmoji" src="/images/{{!isEmojiShow?'emoji':'keyboard'}}.png"></image>
     <image class="img3" src="/images/extra.png" catchtap="handleClickCustom"></image>
   </view>
 
 
+
+
+<!-- 颜表情模块 -->
 <view class="emoji-wrap flex" wx:if="{{isEmojiShow}}">
   <block wx:for="{{emojis}}" wx:key="unique">
   <image class="emoji" catchtap="chooseEmoji" src="http://soupu.oss-cn-shanghai.aliyuncs.com/emoji/{{item.emoji}}.png" data-char="{{item.char}}"></image>
@@ -25,8 +57,21 @@
 </view>
 
 
-<view class="custom-wrap" wx-if="{{isCustomShow}}">
-  custom121212
+
+<!-- 自定义模块 -->
+<view class="custom-wrap flex" wx-if="{{isCustomShow}}">
+<view class="c" catchtap="handleClickAlbum"> 
+  <image src="/images/choose_picture.png"></image>
+  <view>照片</view>
+</view>
+  <view class="c" catchtap="handleClickCamera">
+    <image src="/images/take_photos.png"></image>
+    <view>拍摄</view>
+  </view>
+  <view class="c">
+    <image src="/images/custom.png"></image>
+    <view>自定义功能</view>
+  </view>
 </view>
 </view>
 

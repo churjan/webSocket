@@ -6,6 +6,7 @@ Page({
   data: {
       iptWay: 'keyboard',
       tempVal:'',
+      cursorPos:1,
       msg: [
         {
           type: 'text',
@@ -91,6 +92,13 @@ Page({
 
         },
       ],
+    videoObj: {
+      isShowVideoModel: false,
+      videoUrl: '',
+    },
+    voiceObj:{
+      isShowAuthBtn:false
+    },
     isIptFocus:false,
     isEmojiShow:false,
     isCustomShow:false,
@@ -117,9 +125,61 @@ Page({
   },
   onLoad(options){
     this.init();
+    wx.onUserCaptureScreen(function (res) {
+      console.log(res,111)
+      console.log('用户截屏了')
+    })
   },
+  onReady(){
+     // 创建并返回 video 上下文 videoContext 对象
+    this.videoContext = wx.createVideoContext('myVideo');
+
+  
+
+
+  }, 
   init(){
     this.initEmoji();
+    this.initCheckVoiceAuth();
+  },
+  initCheckVoiceAuth(){
+    wx.getSetting({
+      success: (res) => {
+        if (res.authSetting.hasOwnProperty('scope.record') && !res.authSetting['scope.record']) {
+          console.log(123)
+          this.setData({
+            'voiceObj.isShowAuthBtn': true
+          })
+        }
+      }
+    })
+  },
+  checkVoiceAuth(){
+    wx.getSetting({
+      success: (res) => {
+        if (!res.authSetting['scope.record']) {
+          wx.authorize({
+            scope: 'scope.record',
+            success: (res) => {
+              console.log("录音授权成功");
+              this.setData({
+                'voiceObj.isShowAuthBtn':false
+              })
+              
+            },
+            fail:()=>{
+              console.log("录音授权失败");
+              this.setData({
+                'voiceObj.isShowAuthBtn': true
+              })
+            }
+          })
+        }else{
+          this.handleChangeIptWay();
+        }
+       
+      }
+    })
   },
   initEmoji(){
     let em = {}, emChar = this.data.emojiChar.split("-"), emojis=[];
@@ -141,6 +201,9 @@ Page({
     this.setData({
       tempVal: this.data.tempVal + char
     })
+    this.setData({
+      cursorPos: this.data.cursorPos++
+    })
   },
   handleClickMsg(){
     this.setData({
@@ -148,6 +211,9 @@ Page({
       isEmojiShow:false,
       isCustomShow:false
     })
+  },
+  handleClickChangeIptWay(){
+    this.checkVoiceAuth();
   },
   handleChangeIptWay(){
      this.setData({
@@ -164,24 +230,27 @@ Page({
   },
   //获取键盘输入的信息
   handleGetIptVal(e){
+    
     this.setData({
       tempVal:e.detail.value
     })
-    console.log(this.data.tempVal)
+    this.setData({
+      cursorPos:e.detail.cursor
+    })
   },
   //发送信息
   handleSendMsg(){
-    let iptObjFragment={
+    let fragment={
       type: 'text',
       headUrl: 'http://tx.haiqq.com/uploads/allimg/170504/0641415410-1.jpg',
       isMy: true,
       content: this.data.tempVal
     };
-    let iptObj=this.data.msg;
-    iptObj.push(iptObjFragment);
+    let msg=this.data.msg;
+    msg.push(fragment);
 
     this.setData({
-      msg: iptObj,
+      msg: msg,
       tempVal:''
     })
   },
@@ -203,7 +272,7 @@ Page({
     this.setData({
       //恢复为默认值
       iptWay:'keyboard',
-      isEmojiShow:false,
+      isCustomShow:false,
 
       isEmojiShow:this.data.isEmojiShow?false:true,
     })
@@ -213,6 +282,7 @@ Page({
    
   },
   handleClickCustom(){
+  
     this.setData({
       //恢复为默认值
       iptWay: 'keyboard',
@@ -223,8 +293,111 @@ Page({
     this.setData({
       isIptFocus: this.data.isCustomShow ? false : true
     })
+  },
+
+  handleClickAlbum(e){
+    wx.chooseImage({
+      count: 1, // 默认9
+      sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+      sourceType: ['album','camera'], // 可以指定来源是相册还是相机，默认二者都有
+      success:  (res)=> {
+        // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+        let tempFilePaths = res.tempFilePaths;
+
+
+        let fragment = {
+          type: 'image',
+          headUrl: 'http://tx.haiqq.com/uploads/allimg/170504/0641415410-1.jpg',
+          isMy: true,
+          content: tempFilePaths
+        };
+
+        let msg = this.data.msg;
+        msg.push(fragment);
+
+        this.setData({
+          msg: msg,
+          isCustomShow:false
+        })
+
+
+      }
+    })
+
+   
+
+
+  },
+  handleClickCamera(){
+    wx.chooseVideo({
+      sourceType: ['camera'],
+      maxDuration: 60,
+      camera: 'back',
+      success:  (res)=> {
+        let tempFilePath = res.tempFilePath;
+        let fragment = {
+          type: 'video',
+          headUrl: 'http://tx.haiqq.com/uploads/allimg/170504/0641415410-1.jpg',
+          isMy: true,
+          content: tempFilePath
+        };
+
+        let msg = this.data.msg;
+        msg.push(fragment);
+
+        this.setData({
+          msg: msg,
+          isCustomShow: false
+        })
+      }
+    })
+   
+  },
+
+
+
+
+  handleClickThumbnail(e){
+    console.log(e.currentTarget.dataset.url,111)
+    wx.previewImage({
+      current: e.currentTarget.dataset.url, // 当前显示图片的http链接
+      urls: e.currentTarget.dataset.url // 需要预览的图片http链接列表
+    })
+  },
+
+
+  // video
+  handleClickShowVideo(e){
+    console.log(123)
+    let url=e.currentTarget.dataset.url;
+    this.setData({
+      'videoObj.isShowVideoModel':true,
+      'videoObj.videoUrl': url
+    });
+
+   
+    this.videoContext.play();
+  },
+  handleClickHideVideoModal(){
+   this.setData({
+     'videoObj.isShowVideoModel': false
+   });
+    this.videoContext.stop();
+    
+  },
+  
+
+
+  // voice
+  handleVoiceAuth(res){
+    console.log(res)
+    if (res.detail.authSetting['scope.record']){
+      this.setData({
+        'voiceObj.isShowAuthBtn':false
+      })
+    }
   }
-
-
+ 
+ 
   
 })
