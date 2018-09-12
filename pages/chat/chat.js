@@ -1,6 +1,6 @@
 //获取应用实例
 const app = getApp()
-
+let recorderManager = wx.getRecorderManager();
 Page({
  
   data: {
@@ -92,12 +92,16 @@ Page({
 
         },
       ],
+    //视频
     videoObj: {
       isShowVideoModel: false,
       videoUrl: '',
     },
+    //语音
     voiceObj:{
-      isShowAuthBtn:false
+      isShowAuthBtn:false,
+      isShowVoiceTip:false,
+      moveToCancel:false
     },
     isIptFocus:false,
     isEmojiShow:false,
@@ -396,6 +400,13 @@ Page({
         'voiceObj.isShowAuthBtn':false
       })
     }
+  },
+
+  //录音
+  handleClickToSpeak(){
+    this.setData({
+      isShowVoiceTip:true
+    })
   }
  
  

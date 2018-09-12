@@ -63,6 +63,14 @@
   border-radius:10rpx;
 }
 
+
+
+
+
+
+
+
+
 /* play-video-modal */
 .play-video-modal{
   position: fixed;
@@ -83,6 +91,51 @@
   width:80rpx;
   height:80rpx;
 }
+
+
+
+
+
+
+/* 
+  * voice-tip
+ */
+
+.voice-tip{
+  position: fixed;
+  top: 40%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  width:250rpx;
+  height:250rpx;
+  background-color:rgba(0,0,0,.6);
+  border-radius: 20rpx;
+}
+
+.voice-tip .status-icon{
+  max-width:100%;
+  max-height:100%;
+}
+
+.voice-tip .loading{
+  position: absolute;
+  left:50%;
+  transform: translateX(-50%);
+  bottom:60rpx;
+  width: 50rpx;
+  height:10rpx;
+}
+.voice-tip .status-text{
+  position: absolute;
+  left:50%;
+  transform: translateX(-50%);
+  width:100%;
+  bottom:60rpx;
+  font-size:30rpx;
+  color:#fff;
+}
+
+
 
 
 
