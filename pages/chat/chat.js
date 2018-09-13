@@ -4,6 +4,8 @@ let recorderManager = wx.getRecorderManager();
 Page({
  
   data: {
+    //系统信息
+      sysInfo:{},
       iptWay: 'keyboard',
       tempVal:'',
       cursorPos:1,
@@ -100,7 +102,8 @@ Page({
     //语音
     voiceObj:{
       isShowAuthBtn:false,
-      isShowVoiceTip:false,
+      isShowVoiceTip: false,
+      isCancelVoice:false,
       moveToCancel:false
     },
     isIptFocus:false,
@@ -143,8 +146,15 @@ Page({
 
   }, 
   init(){
+    this.initGetSystemInfo();
     this.initEmoji();
     this.initCheckVoiceAuth();
+  },
+  initGetSystemInfo(){
+    this.setData({
+      sysInfo: wx.getSystemInfoSync()
+    })
+    console.log(this.data.sysInfo);
   },
   initCheckVoiceAuth(){
     wx.getSetting({
@@ -403,10 +413,29 @@ Page({
   },
 
   //录音
-  handleClickToSpeak(){
+  handleLongpressToSpeak(){
     this.setData({
-      isShowVoiceTip:true
+      'voiceObj.isShowVoiceTip':true
     })
+  },
+  handleTouchendFinishedSpeak(){
+    this.setData({
+      'voiceObj.isShowVoiceTip': false
+    })
+  },
+  //
+  handleTouchmoveToCancel(e){
+    let clientY = e.touches[0].clientY;
+    if (this.data.sysInfo.windowHeight-clientY> 50){
+      this.setData({
+        'voiceObj.isCancelVoice': true
+      })
+    }else{
+      this.setData({
+        'voiceObj.isCancelVoice': false
+      })
+    }
+
   }
  
  
