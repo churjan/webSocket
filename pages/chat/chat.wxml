@@ -20,6 +20,12 @@
       <image class="poster" src="/images/play.jpg" data-url="{{item.content}}" bindtap="handleClickShowVideo"></image>
       
     </block>
+
+  <!-- 语音 -->
+    <block wx:if="{{item.type=='voice'}}">
+     <view class="voice" data-url="{{item.tempFilePath}}"  style="background-color:{{item.isMy?'#ffff00':'#fff'}}" bindtap="handleClickListenVoice"><div class="{{item.isMy?'arrow-right':'arrow-left'}}"></div>123</view>
+      <view>{{item.duration}}''</view>
+    </block>
   </view>
 
 
@@ -39,14 +45,18 @@
 
 
 <view class="voice-tip" wx:if="{{voiceObj.isShowVoiceTip}}">
- <block wx:if="{{!voiceObj.isCancelVoice}}">
+ <block wx:if="{{voiceObj.voiceStatus===1}}">
    <image class="status-icon" src="/images/speak.png"></image>
               <image class="loading" src="data:image/gif;base64,R0lGODlhOgAKAKIFAERERIWFhWVlZdbW1qampv///wAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFFAAFACwAAAAAOgAKAAADazi6XEUwSheqvU7ozR34YMiMgyOdBHWtGed6YUw2Dxqpq9W6GxyDs4XJBsHlAjuewPcDBBVDojGX5DF/z1JNWjjqCspeoQl8Rm1TFji8HJOd5i2660Wuw1dZnFike6svbmRZZyhpGHdKeSEJACH5BAUUAAUALAAAAAA6AAoAAANrCLpcNTBKR6q9LujNnfhgyIyAI50Dda0Z53phTDYPGqmr1bobHIOzhckGweUIO17A9xMEFUOiMZfkMX/PUk1aOOoKyl6hCXxGbVMWOLwck53mLbrrRa7DV1mcWKR7qy9uZFlnKGkYd0p5IQkAIfkEBRQABQAsAAAAADoACgAAA2soulwFMEo3qr2O6M1d+GDIjIIjnQB1rRnnemFMNg8aqavVuhscg7OFyQbB5QY7HsH3CwQVQ6Ixl+Qxf89STVo46grKXqEJfEZtUxY4vByTneYtuutFrsNXWZxYpHurL25kWWcoaRh3SnkhCQAh+QQFFAAFACwAAAAAOgAKAAADaxi6XCUwSgeqvW7ozR35YMiMgSOdAnWtGed6YUw2Dxqpq9W6GxyDs4XJBsHlADvewPcjBBVDojGX5DF/z1JNWjjqCspeoQl8Rm1TFji8HJOd5i2660Wuw1dZnFike6svbmRZZyhpGHdKeSEJACH5BAUUAAUALAAAAAA6AAoAAANrSLpcFTBKJ6q9DujN3fhgyIyEI50Bda0Z53phTDYPGqmr1bobHIOzhckGweUEOx7A9xsEFUOiMZfkMX/PUk1aOOoKyl6hCXxGbVMWOLwck53mLbrrRa7DV1mcWKR7qy9uZFlnKGkYd0p5IQkAOw==" />
   <view class="status-text">手指上滑，取消发送</view>
  </block>
- <block wx:else>
- <image class="status-icon" src="/images/recall.png"></image>
-  <view class="status-text red">手指上滑，取消发送</view>
+ <block  wx:elif="{{voiceObj.voiceStatus===2}}">
+  <image class="status-icon" src="/images/recall.png"></image>
+    <view class="status-text red">手指上滑，取消发送</view>
+ </block>
+ <block  wx:elif="{{voiceObj.voiceStatus===3}}">
+  <image class="status-icon" src="/images/attention.png"></image>
+    <view class="status-text red">录音时间太短</view>
  </block>
 </view>
 

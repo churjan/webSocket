@@ -1,6 +1,7 @@
 //获取应用实例
 const app = getApp()
-let recorderManager = wx.getRecorderManager();
+let recorderManager = wx.getRecorderManager(),interval;
+let innerAudioContext = wx.createInnerAudioContext();
 Page({
  
   data: {
@@ -103,8 +104,11 @@ Page({
     voiceObj:{
       isShowAuthBtn:false,
       isShowVoiceTip: false,
-      isCancelVoice:false,
-      moveToCancel:false
+      voiceStatus:1,
+      moveToCancel:false,
+      recordTime:0,
+
+
     },
     isIptFocus:false,
     isEmojiShow:false,
@@ -145,6 +149,9 @@ Page({
 
 
   }, 
+  onShow(){
+    innerAudioContext.stop();
+  },
   init(){
     this.initGetSystemInfo();
     this.initEmoji();
@@ -290,7 +297,7 @@ Page({
 
       isEmojiShow:this.data.isEmojiShow?false:true,
     })
-    this.setData({
+    this.setData({  
       isIptFocus: this.data.isEmojiShow ? false : true
     })
    
@@ -414,28 +421,108 @@ Page({
 
   //录音
   handleLongpressToSpeak(){
+
+  setTimeout(()=>{
+    
     this.setData({
-      'voiceObj.isShowVoiceTip':true
+      'voiceObj.isShowVoiceTip': true
     })
+    innerAudioContext.stop();
+    const options = {
+      duration: 10000
+    }
+    interval = setInterval(() => {
+      this.setData({
+        'voiceObj.recordTime': this.data.voiceObj.recordTime + 1
+      })
+      console.log(this.data.voiceObj.recordTime,7777)
+      if (this.data.voiceObj.recordTime >= 10) {
+        clearInterval(interval);
+        this.handleTouchendFinishedSpeak();
+      }
+    }, 1000)
+    recorderManager.onStart((res) => {
+
+    })
+    recorderManager.start(options);
+  },500)
+   
   },
   handleTouchendFinishedSpeak(){
+   
+    clearInterval(interval);
+      this.setData({
+        //复原
+        'voiceObj.recordTime': 0,
+        'voiceObj.isShowVoiceTip': false
+      })
+    if (this.data.voiceObj.voiceStatus===1){
+      console.log(this.data.voiceObj,8888)
+      console.log(this.data.voiceObj.recordTime,8888)
+      if (this.data.voiceObj.recordTime < 3) {
+        this.setData({
+          'voiceObj.voiceStatus': 3,
+          'voiceObj.isShowVoiceTip': true
+        })
+      }else{
+        recorderManager.onStop((res) => {
+
+          console.log(res)
+          let tempFilePath = res.tempFilePath;
+          let fileSize = res.fileSize;
+          let duration = res.duration;
+          let fragment = {
+            type: 'voice',
+            headUrl: 'http://tx.haiqq.com/uploads/allimg/170504/0641415410-1.jpg',
+            isMy: true,
+            tempFilePath: tempFilePath,
+            fileSize: fileSize,
+            duration: (duration / 1000).toFixed(0)
+
+          };
+
+          let msg = this.data.msg;
+          msg.push(fragment);
+
+          this.setData({
+            msg: msg
+          })
+
+
+
+        })
+      }
+     
+      
+      
+    }
+    recorderManager.stop();
     this.setData({
-      'voiceObj.isShowVoiceTip': false
+      //复原
+      'voiceObj.voiceStatus': 1,
     })
   },
-  //
   handleTouchmoveToCancel(e){
     let clientY = e.touches[0].clientY;
     if (this.data.sysInfo.windowHeight-clientY> 50){
       this.setData({
-        'voiceObj.isCancelVoice': true
+        'voiceObj.voiceStatus': 2
       })
     }else{
       this.setData({
-        'voiceObj.isCancelVoice': false
+        'voiceObj.voiceStatus': 1
       })
     }
 
+  },
+
+  //听录音
+  handleClickListenVoice(e){
+    innerAudioContext.stop();
+    let url=e.currentTarget.dataset.url;
+    console.log(url)
+    innerAudioContext.src=url;
+    innerAudioContext.play();
   }
  
  

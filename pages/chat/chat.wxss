@@ -62,7 +62,37 @@
   height:280rpx;
   border-radius:10rpx;
 }
+.chatlist .item .voice{
+  position: relative;
+  width:40%;
+  margin:0 10rpx;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  font-size: 30rpx;
+  word-break:break-all;
 
+}
+.chatlist .item .voice .arrow-left{
+  position:absolute;
+  width: 0;
+  height:0;
+  left:-14rpx;
+  top:20rpx;
+ 
+  border: 16rpx solid transparent;
+  border-right-color:#fff;
+  border-left:none;
+}
+.chatlist .item .voice .arrow-right{
+  position:absolute;
+  width: 0;
+  height:0;
+  right:-14rpx;
+  top:20rpx;
+  border: 16rpx solid transparent;
+  border-left-color:#ffff00;
+  border-right:none;
+}
 
 
 
